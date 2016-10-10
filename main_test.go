@@ -1,12 +1,33 @@
 package main
 
-import "testing"
+import (
+	"testing"
 
-func TestGetEvents(t *testing.T) {
-	events := getEvents()
-	nb := len(events)
+	. "github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/reporters"
+	. "github.com/onsi/gomega"
+)
 
-	if nb != 2 {
-		t.Errorf("expected nb of events to be 2, got: %v", nb)
-	}
+func TestBooks(t *testing.T) {
+	RegisterFailHandler(Fail)
+	junitReporter := reporters.NewJUnitReporter("junit.xml")
+	RunSpecsWithDefaultAndCustomReporters(t, "Main", []Reporter{junitReporter})
 }
+
+var _ = Describe("Events", func() {
+
+	var events []Event
+
+	BeforeEach(func() {
+		events = getEvents()
+	})
+
+	It("should have 2 events", func() {
+		Expect(len(events)).To(Equal(2))
+	})
+
+	It("should have a first event named ToulouseJS", func() {
+		Expect(events[0].Name).To(Equal("ToulouseJS"))
+	})
+
+})
